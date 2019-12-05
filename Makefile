@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 CXX ?= g++
-CXXFLAGS ?= -Wall -Werror -Wextra -Weffc++ -std=c++11 
+CXXFLAGS ?= -Wall -Werror -Wextra -Weffc++ -std=c++14
 # source and objcet directorys
 SRC_DIR ?= src
 OBJ_DIR ?= objs
