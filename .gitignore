@@ -1,0 +1,8 @@
+# ignore executable
+producer-consumer
+# ignore objects directories
+objs/
+# ignore all tmp backup files
+*~
+.*.swp
+.*.swo
