@@ -12,7 +12,7 @@ make
 ## Build
 
 To build this solution run ```make``` command in root directory of project.
-It will make an exequtable ```producer-consumer```
+It will make an executable ```producer-consumer```
 
 ## Run
 
