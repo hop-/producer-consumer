@@ -5,7 +5,7 @@ int main()
 {
     std::cout << "Producer Consumer" << std::endl;
 
-    core::Application::start();
+    Core::Application::start();
 
     return 0;
 }

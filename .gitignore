@@ -6,3 +6,5 @@ objs/
 *~
 .*.swp
 .*.swo
+# editors
+.vscode

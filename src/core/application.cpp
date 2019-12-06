@@ -1,8 +1,28 @@
 #include "application.hpp"
 
 #include <iostream>
+#include <signal.h>
 
-namespace core
+namespace
+{
+
+short inputNumberOf(const std::string& name, short min, short max)
+{
+    // TODO
+    // check if max > min
+    // it would be eligible if max and min are not hardcoded
+    int number = 0;
+    do {
+        std::cout << "Please input the number of " << name << " ("
+            << min << "-" << max << ")" << std::endl;
+        std::cin >> number;
+    } while (number < min || number > max);
+    return number;
+}
+
+} // namespace <unnamed>
+
+namespace Core
 {
 
 std::queue<short> Application::m_dataQueue = std::queue<short>();
@@ -17,27 +37,24 @@ void Application::start()
     static const short minNumberOfConsumers = 1;
     static const short maxNumberOfConsumers = 10;
 
-    const short producersNumber = Application::inputNumberOf("producers",
+    const short producersNumber = inputNumberOf("producers",
                 minNumberOfProducers, maxNumberOfProducers);
-    const short consumersNumber = Application::inputNumberOf("consumers",
+    const short consumersNumber = inputNumberOf("consumers",
                 minNumberOfConsumers, maxNumberOfConsumers);
 
-    std::cout << "producers: " << producersNumber << std::endl;
-    std::cout << "consumers: " << consumersNumber << std::endl;
+    std::cout << "Producers: " << producersNumber << std::endl;
+    std::cout << "Consumers: " << consumersNumber << std::endl;
 }
 
-short Application::inputNumberOf(const std::string& name, short min, short max)
+void Application::stop(int)
 {
-    // TODO
-    // check if max > min
-    // it would be eligible if max and min are not hardcoded
-    int number = 0;
-    do {
-        std::cout << "Please input the number of " << name << " ("
-            << min << "-" << max << ")" << std::endl;
-        std::cin >> number;
-    } while (number < min || number > max);
-    return number;
+
 }
 
-} // namespace core
+void Application::handleInterrupt()
+{
+    signal(SIGABRT, Application::stop);
+    signal(SIGINT, Application::stop);
+}
+
+} // namespace Core

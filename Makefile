@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 CXX ?= g++
 CXXFLAGS ?= -Wall -Werror -Wextra -Weffc++ -std=c++14
+LIBS += -lpthread
 # source and objcet directorys
 SRC_DIR ?= src
 OBJ_DIR ?= objs
