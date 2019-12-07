@@ -35,8 +35,8 @@ private:
     // Syncrionized output file
     static std::shared_ptr<Core::DataFile> m_outFile;
     // producers and consumers
-    static std::vector<std::unique_ptr<Base::Worker>> m_producers;
-    static std::vector<std::unique_ptr<Base::Worker>> m_consumers;
+    static std::vector<Base::Worker*> m_producers;
+    static std::vector<Base::Worker*> m_consumers;
 };
 
 } // namespace Core

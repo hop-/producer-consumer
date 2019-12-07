@@ -14,7 +14,7 @@ QueueManager::QueueManager()
 void QueueManager::push(short value)
 {
     std::unique_lock<std::mutex> lock(m_dataMutex);
-    while (m_data.size() == m_maxSize) {
+    while (m_data.size() >= m_maxSize) {
         m_cvPush.wait(lock);
     }
     m_data.push_back(value);
@@ -38,6 +38,14 @@ short QueueManager::pop()
 unsigned QueueManager::size() const
 {
     return m_data.size();
+}
+
+void QueueManager::waitTillNotEmpty()
+{
+    std::unique_lock<std::mutex> lock(m_dataMutex);
+    while (m_data.size() != 0) {
+        m_cvPush.wait(lock);
+    }
 }
     
 } // namespace Core

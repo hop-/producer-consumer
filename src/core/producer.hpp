@@ -15,6 +15,8 @@ class Producer
 {
 public:
     Producer(std::shared_ptr<Core::QueueManager> dataQueue);
+    Producer(const Producer&) = delete;
+    Producer operator=(const Producer&) = delete;
 
 private:
     void job();

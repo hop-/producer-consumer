@@ -17,6 +17,7 @@ public:
     void push(short value);
     short pop();
     unsigned size() const;
+    void waitTillNotEmpty();
 
 private:
     const unsigned m_maxSize = 100;

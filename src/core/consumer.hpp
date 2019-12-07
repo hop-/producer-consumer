@@ -17,6 +17,8 @@ class Consumer
 public:
     Consumer(std::shared_ptr<Core::QueueManager> dataQueue
         , std::shared_ptr<Core::DataFile> outFile);
+    Consumer(const Consumer&) = delete;
+    Consumer& operator=(const Consumer&) = delete;
 
 private:
     void job();

@@ -46,7 +46,7 @@ export INCLUDES
 _default: _makeODir $(execable)
 	@echo -e "$(GREEN)Compiled.$(RCOLOR)"
 
-.PHONY: install debug noassert mingw clean resolve resource_converter
+.PHONY: install clean resolve
 
 install:
 	@$(MAKE) --no-print-directory $(MAKEFILE)

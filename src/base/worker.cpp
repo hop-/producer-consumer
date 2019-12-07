@@ -39,4 +39,14 @@ void Worker::stop()
     isRunning = false;
 }
 
+void Worker::wait()
+{
+    m_thread.join();
+}
+
+void Worker::detach()
+{
+    m_thread.detach();
+}
+
 } // namespace Base

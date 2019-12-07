@@ -7,13 +7,14 @@
 #include <chrono>
 #include <thread>
 #include <signal.h>
+#include <unistd.h>
 
 namespace
 {
 
 void waitASecond()
 {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 short inputNumberOf(const std::string& name, short min, short max)
@@ -42,10 +43,10 @@ std::shared_ptr<Core::QueueManager> Application::m_dataQueue =
 std::shared_ptr<Core::DataFile> Application::m_outFile =
     std::shared_ptr<Core::DataFile>(new Core::DataFile);
 
-std::vector<std::unique_ptr<Base::Worker>> Application::m_producers =
-    std::vector<std::unique_ptr<Base::Worker>>();
-std::vector<std::unique_ptr<Base::Worker>> Application::m_consumers =
-    std::vector<std::unique_ptr<Base::Worker>>();
+std::vector<Base::Worker*> Application::m_producers =
+    std::vector<Base::Worker*>();
+std::vector<Base::Worker*> Application::m_consumers =
+    std::vector<Base::Worker*>();
 
 void Application::start()
 {
@@ -85,12 +86,24 @@ void Application::stop(int)
     for (auto& p : m_producers) {
         p->stop();
     }
-    std::cout << "All producers has been stopped" << std::endl;
-    std::cout << "Waiting for consumers to finish their job" << std::endl;
-    // TODO wait for empty queue
-    for (auto& c : m_consumers) {
-        c->stop();
+
+    for (auto& p : m_producers) {
+        p->wait();
     }
+    std::cout << "All producers has been stopped" << std::endl;
+
+    std::cout << "Waiting for consumers to finish their job" << std::endl;
+
+    m_dataQueue->waitTillNotEmpty();
+
+    std::cout << "Data queue size: " << m_dataQueue->size() << std::endl;
+
+    std::cout << "Exiting" << std::endl;
+
+    for (auto& c : m_consumers) {
+        c->detach();
+    }
+
     exit(0);
 }
 
@@ -105,7 +118,7 @@ void Application::createProducers(short producersNumber)
     std::cout << "Producers: " << producersNumber << std::endl;
     for (int i = 0; i < producersNumber; i++) {
         m_producers.push_back(
-            std::unique_ptr<Core::Producer>(new Core::Producer(m_dataQueue)));
+            new Core::Producer(m_dataQueue));
     }
 }
 
@@ -114,7 +127,7 @@ void Application::createConsumers(short consumersNumber)
     std::cout << "Consumers: " << consumersNumber << std::endl;
     for (int i = 0; i < consumersNumber; i++) {
         m_consumers.push_back(
-            std::unique_ptr<Core::Consumer>(new Core::Consumer(m_dataQueue, m_outFile)));
+            new Core::Consumer(m_dataQueue, m_outFile));
     }
 }
 
