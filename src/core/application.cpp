@@ -36,8 +36,8 @@ namespace Core
 {
 
 // definition of static members of Application
-std::shared_ptr<std::queue<short>> Application::m_dataQueue =
-    std::shared_ptr<std::queue<short>>(new std::queue<short>());
+std::shared_ptr<Core::QueueManager> Application::m_dataQueue =
+    std::shared_ptr<Core::QueueManager>(new QueueManager());
 
 std::shared_ptr<Core::DataFile> Application::m_outFile =
     std::shared_ptr<Core::DataFile>(new Core::DataFile);
@@ -49,6 +49,7 @@ std::vector<std::unique_ptr<Base::Worker>> Application::m_consumers =
 
 void Application::start()
 {
+    const std::string fileName = "data.txt";
     // this function called to handle termiantion gracefully
     handleInterrupt();
     // the minimum and the maximum number of consumers and producers
@@ -68,6 +69,8 @@ void Application::start()
     createProducers(producersNumber);
     createConsumers(consumersNumber);
 
+    // opening output file to write
+    m_outFile->open(fileName);
     // starting all workers
     startAllWorkers();
     printStatus();

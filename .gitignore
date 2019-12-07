@@ -2,6 +2,8 @@
 producer-consumer
 # ignore objects directories
 objs/
+# output files
+data.txt
 # ignore all tmp backup files
 *~
 .*.swp

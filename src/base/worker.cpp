@@ -5,13 +5,15 @@
 
 namespace
 {
-    void sleep()
-    {
-        static std::random_device rd;
-        static std::mt19937 gen(rd());
-        static std::uniform_int_distribution<> randInt(0, 100);
-        std::this_thread::sleep_for(std::chrono::milliseconds(randInt(gen)));
-    }
+
+void sleep()
+{
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> randInt(0, 100);
+    std::this_thread::sleep_for(std::chrono::milliseconds(randInt(gen)));
+}
+
 } // namespace <unnamed>
 
 namespace Base

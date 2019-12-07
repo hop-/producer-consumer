@@ -3,6 +3,7 @@
 
 #include <base/worker.hpp>
 #include <core/dataFile.hpp>
+#include <core/queueManager.hpp>
 
 #include <string>
 #include <queue>
@@ -30,7 +31,7 @@ private:
 private:
     // Data queue
     // Note:    char could fit here aswell
-    static std::shared_ptr<std::queue<short>> m_dataQueue;
+    static std::shared_ptr<Core::QueueManager> m_dataQueue;
     // Syncrionized output file
     static std::shared_ptr<Core::DataFile> m_outFile;
     // producers and consumers

@@ -3,6 +3,7 @@
 
 #include <base/worker.hpp>
 #include <core/dataFile.hpp>
+#include <core/queueManager.hpp>
 
 #include <memory>
 #include <queue>
@@ -14,14 +15,14 @@ class Consumer
     : public Base::Worker
 {
 public:
-    Consumer(std::shared_ptr<std::queue<short>> dataQueue
+    Consumer(std::shared_ptr<Core::QueueManager> dataQueue
         , std::shared_ptr<Core::DataFile> outFile);
 
 private:
     void job();
 
 private:
-    std::shared_ptr<std::queue<short>> m_dataQueue;
+    std::shared_ptr<Core::QueueManager> m_dataQueue;
     std::shared_ptr<Core::DataFile> m_outFile;
 };
     
