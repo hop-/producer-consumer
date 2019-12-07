@@ -50,8 +50,6 @@ std::vector<std::unique_ptr<Base::Worker>> Application::m_consumers =
 void Application::start()
 {
     const std::string fileName = "data.txt";
-    // this function called to handle termiantion gracefully
-    handleInterrupt();
     // the minimum and the maximum number of consumers and producers
     // Note:    It would be better to set these numbers from outside of this
     //          class but this time I preffered to hardcode it here
@@ -69,8 +67,12 @@ void Application::start()
     createProducers(producersNumber);
     createConsumers(consumersNumber);
 
+    // this function called to handle termiantion gracefully
+    handleInterrupt();
+
     // opening output file to write
     m_outFile->open(fileName);
+
     // starting all workers
     startAllWorkers();
     printStatus();

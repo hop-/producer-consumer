@@ -21,7 +21,7 @@ void DataFile::open(const std::string& fileName)
 void DataFile::write(short value)
 {
     std::lock_guard<std::mutex> lock(m_writeMutex);
-    m_fileStream << value << ",";
+    m_fileStream << value << "," << std::flush;
 }
     
 } // namespace Core
