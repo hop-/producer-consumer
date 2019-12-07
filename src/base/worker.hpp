@@ -20,7 +20,7 @@ protected:
 
 private:
     bool isRunning = false;
-    std::thread m_thread;
+    std::thread m_thread = std::thread();
 };
 
 } // namespace Base

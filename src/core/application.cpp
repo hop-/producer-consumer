@@ -1,5 +1,8 @@
 #include "application.hpp"
 
+#include <core/consumer.hpp>
+#include <core/producer.hpp>
+
 #include <iostream>
 #include <signal.h>
 
@@ -25,36 +28,85 @@ short inputNumberOf(const std::string& name, short min, short max)
 namespace Core
 {
 
-std::queue<short> Application::m_dataQueue = std::queue<short>();
+// definition of static members of Application
+std::shared_ptr<std::queue<short>> Application::m_dataQueue =
+    std::shared_ptr<std::queue<short>>(new std::queue<short>());
+std::vector<std::unique_ptr<Base::Worker>> Application::m_producers =
+    std::vector<std::unique_ptr<Base::Worker>>();
+std::vector<std::unique_ptr<Base::Worker>> Application::m_consumers =
+    std::vector<std::unique_ptr<Base::Worker>>();
 
 void Application::start()
 {
+    // this function called to handle termiantion gracefully
+    handleInterrupt();
     // the minimum and the maximum number of consumers and producers
     // Note:    It would be better to set these numbers from outside of this
     //          class but this time I preffered to hardcode it here
-    static const short minNumberOfProducers = 1;
-    static const short maxNumberOfProducers = 10;
-    static const short minNumberOfConsumers = 1;
-    static const short maxNumberOfConsumers = 10;
+    const short minNumberOfProducers = 1;
+    const short maxNumberOfProducers = 10;
+    const short minNumberOfConsumers = 1;
+    const short maxNumberOfConsumers = 10;
 
     const short producersNumber = inputNumberOf("producers",
                 minNumberOfProducers, maxNumberOfProducers);
     const short consumersNumber = inputNumberOf("consumers",
                 minNumberOfConsumers, maxNumberOfConsumers);
 
-    std::cout << "Producers: " << producersNumber << std::endl;
-    std::cout << "Consumers: " << consumersNumber << std::endl;
+    // creating producers and consumers
+    createProducers(producersNumber);
+    createConsumers(consumersNumber);
+
+    // starting all workers
+
 }
 
 void Application::stop(int)
 {
-
+    std::cout << std::endl;
+    std::cout << "Stopping gracefully" << std::endl;
+    for (auto& p : m_producers) {
+        p->stop();
+    }
+    std::cout << "All producers has been stopped" << std::endl;
+    std::cout << "Waiting for consumers to finish their job" << std::endl;
+    // TODO wait for empty queue
+    exit(0);
 }
 
 void Application::handleInterrupt()
 {
-    signal(SIGABRT, Application::stop);
+    //signal(SIGABRT, Application::stop);
     signal(SIGINT, Application::stop);
+}
+
+void Application::createProducers(short producersNumber)
+{
+    std::cout << "Producers: " << producersNumber << std::endl;
+    for (int i = 0; i < producersNumber; i++) {
+        m_producers.push_back(
+            std::unique_ptr<Core::Producer>(new Core::Producer(m_dataQueue)));
+    }
+}
+
+void Application::createConsumers(short consumersNumber)
+{
+    std::cout << "Consumers: " << consumersNumber << std::endl;
+    for (int i = 0; i < consumersNumber; i++) {
+        m_consumers.push_back(
+            std::unique_ptr<Core::Consumer>(new Core::Consumer(m_dataQueue)));
+    }
+}
+
+void Application::startAllWorkers()
+{
+    for (auto& p : m_producers) {
+        p->start();
+    }
+
+    for (auto& c : m_consumers) {
+        c->start();
+    }
 }
 
 } // namespace Core
