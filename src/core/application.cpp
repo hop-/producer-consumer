@@ -4,10 +4,17 @@
 #include <core/producer.hpp>
 
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <signal.h>
 
 namespace
 {
+
+void waitASecond()
+{
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+}
 
 short inputNumberOf(const std::string& name, short min, short max)
 {
@@ -31,6 +38,10 @@ namespace Core
 // definition of static members of Application
 std::shared_ptr<std::queue<short>> Application::m_dataQueue =
     std::shared_ptr<std::queue<short>>(new std::queue<short>());
+
+std::shared_ptr<Core::DataFile> Application::m_outFile =
+    std::shared_ptr<Core::DataFile>(new Core::DataFile);
+
 std::vector<std::unique_ptr<Base::Worker>> Application::m_producers =
     std::vector<std::unique_ptr<Base::Worker>>();
 std::vector<std::unique_ptr<Base::Worker>> Application::m_consumers =
@@ -58,7 +69,8 @@ void Application::start()
     createConsumers(consumersNumber);
 
     // starting all workers
-
+    startAllWorkers();
+    printStatus();
 }
 
 void Application::stop(int)
@@ -71,6 +83,9 @@ void Application::stop(int)
     std::cout << "All producers has been stopped" << std::endl;
     std::cout << "Waiting for consumers to finish their job" << std::endl;
     // TODO wait for empty queue
+    for (auto& c : m_consumers) {
+        c->stop();
+    }
     exit(0);
 }
 
@@ -94,7 +109,7 @@ void Application::createConsumers(short consumersNumber)
     std::cout << "Consumers: " << consumersNumber << std::endl;
     for (int i = 0; i < consumersNumber; i++) {
         m_consumers.push_back(
-            std::unique_ptr<Core::Consumer>(new Core::Consumer(m_dataQueue)));
+            std::unique_ptr<Core::Consumer>(new Core::Consumer(m_dataQueue, m_outFile)));
     }
 }
 
@@ -106,6 +121,14 @@ void Application::startAllWorkers()
 
     for (auto& c : m_consumers) {
         c->start();
+    }
+}
+
+void Application::printStatus()
+{
+    while (true) {
+        waitASecond();
+        std::cout << "Data queue size is: " << m_dataQueue->size() << std::endl;
     }
 }
 

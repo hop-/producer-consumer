@@ -2,6 +2,7 @@
 #define CORE_APPLICATION_HPP
 
 #include <base/worker.hpp>
+#include <core/dataFile.hpp>
 
 #include <string>
 #include <queue>
@@ -24,11 +25,14 @@ private:
     static void createProducers(short producersNumber);
     static void createConsumers(short consumersNumber);
     static void startAllWorkers();
+    static void printStatus();
 
 private:
     // Data queue
     // Note:    char could fit here aswell
     static std::shared_ptr<std::queue<short>> m_dataQueue;
+    // Syncrionized output file
+    static std::shared_ptr<Core::DataFile> m_outFile;
     // producers and consumers
     static std::vector<std::unique_ptr<Base::Worker>> m_producers;
     static std::vector<std::unique_ptr<Base::Worker>> m_consumers;
