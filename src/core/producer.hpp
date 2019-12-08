@@ -10,6 +10,7 @@
 namespace Core
 {
 
+// class Producer inherited form abstract Worker
 class Producer 
     : public Base::Worker
 {
