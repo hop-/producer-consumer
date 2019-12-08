@@ -12,20 +12,29 @@
 namespace Core
 {
 
+// class Application the static main class to run applicaiton
 class Application
 {
 public:
     Application() = delete;
 
 public:
+    // start the application
     static void start();
+    // stop the producers and wait till
+    // consumers complete their job
     static void stop(int sig = 0);
 
 private:
+    // handle iterruption signal and call Application::stop on it
     static void handleInterrupt();
+    // create producers
     static void createProducers(short producersNumber);
+    // create consumers
     static void createConsumers(short consumersNumber);
+    // starts all workers (producers and consumers)
     static void startAllWorkers();
+    // print status of data queue each second
     static void printStatus();
 
 private:

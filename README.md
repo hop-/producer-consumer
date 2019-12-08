@@ -22,6 +22,8 @@ Execute the solution with tne following command
 ```
 After start please input the number of producers and consumers. The numbers should be between 1 to 10.
 
+Iterruption ```Ctrl+C``` of the process will cause of gracefully shut down.
+It will stop producers and wait till consumers complete their job.
 
 ## Output
 

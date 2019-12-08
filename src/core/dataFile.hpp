@@ -8,6 +8,7 @@
 namespace Core
 {
 
+// class DataFile to manage synchronized write into file
 class DataFile
 {
 public:
@@ -15,11 +16,15 @@ public:
     ~DataFile();
 
 public:
+    // open file to work with
     void open(const std::string& fileName);
+    // synchronized write function
     void write(short value);
 
 private:
+    // file stream
     std::ofstream m_fileStream;
+    // mutex for file to be synchronized
     std::mutex m_writeMutex;
 };
 
