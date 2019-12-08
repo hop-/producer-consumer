@@ -2,6 +2,11 @@
 
 A rappid solution of the producer-consumer issue.
 
+github repo https://github.com/hop-/producer-consumer
+
+Author:
+    Hovhannes Palyan (hovhannespalyan@gmail.com)
+
 ## Requirements
 
 The project has been tested on linux machine.
